@@ -1,0 +1,28 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: msvc-products
+        uri: lb://msvc-products
+        predicates:
+        - Path=/api/products/**
+        #- Header=token, \d+ # expresion regular, permite digitos, debe existir un prop en el header llamado token q seran numeros
+        # - Header=token, 12345 # Condicional para la cabecera, propiedad: token   valor: 12345
+        # - Method=GET, POST # solo se aceptan metodos GET y POST para msvc products
+        # - Query=color, verde # debe venir el parametro color con valor verde
+        # - Query=color2 # debe existir una parametro llamado color2
+        # - Cookie=color, azul
+        # - Header=Content-Type, application/json
+        filters:
+        - StripPrefix=2
+        - EjemploCookie=Hola mensaje personalizado para msvc productos, user, Andres
+      - id: msvc-items
+        uri: lb://msvc-items
+        predicates:
+        - Path=/api/items/**
+        filters:
+        - StripPrefix=2
+        - AddRequestHeader=token-request, aaa
+        - AddResponseHeader=token-response, bbb
+        - AddRequestParameter=name, Andres
+        - SetResponseHeader=Content-Type, text/plain
